@@ -1,0 +1,12 @@
+/bin/
+/build/
+/logs/
+/old_stuff/
+/run/
+/runClient.launch
+/runData.launch
+/runServer.launch
+/.gradle/
+/.settings/
+/.classpath
+/.project

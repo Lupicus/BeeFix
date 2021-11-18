@@ -1,0 +1,23 @@
+modLoader="javafml"
+loaderVersion="[37,)"
+license="MIT License"
+[[mods]]
+modId="beefix"
+version="${file.jarVersion}"
+displayName="Bee Fix"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/bee-fix"
+logoFile="logo.png"
+authors="Lupicus, MacTso"
+description='''Bee Fix Mod [MC-229321]'''
+[[dependencies.beefix]]
+    modId="forge"
+    mandatory=true
+    versionRange="[37,)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.beefix]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.17.1,1.18)"
+    ordering="NONE"
+    side="BOTH"

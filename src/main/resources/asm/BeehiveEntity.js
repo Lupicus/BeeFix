@@ -10,6 +10,8 @@ function initializeCoreMod() {
     			'name': 'net.minecraft.world.level.block.entity.BeehiveBlockEntity'
     		},
     		'transformer': function(classNode) {
+    			if (checkPatched(classNode))
+    				return classNode;
     			var count = 0
     			var fn = asmapi.mapMethod('m_58744_') // addOccupantWithPresetTicks
     			var fn2 = asmapi.mapMethod('m_155149_') // tickOccupants
@@ -68,4 +70,22 @@ function patch_m_155149_(obj) {
 	else
 		asmapi.log("ERROR", "Failed to modify BeehiveBlockEntity: remove not found")
 	return
+}
+
+function checkPatched(cobj) {
+    var fn = asmapi.mapMethod('m_155149_') // tickOccupants
+    for (var i = 0; i < cobj.methods.size(); ++i) {
+    	var obj = cobj.methods.get(i)
+    	if (obj.name == fn) {
+    		var f1 = asmapi.mapMethod('m_155232_') // setChanged
+			var n1 = "net/minecraft/world/level/block/entity/BeehiveBlockEntity"
+			var d1 = "(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)V"
+    		var node = asmapi.findFirstMethodCall(obj, asmapi.MethodType.STATIC, n1, f1, d1)
+    		if (node != null) {
+    			asmapi.log("INFO", "BeehiveBlockEntity patch being skipped; not needed in this version")
+    			return true;
+    		}
+    	}
+    }
+    return false;
 }

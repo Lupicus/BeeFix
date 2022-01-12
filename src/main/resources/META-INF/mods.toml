@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[37,)"
+loaderVersion="[33,)"
 license="MIT License"
 [[mods]]
 modId="beefix"
@@ -8,16 +8,16 @@ displayName="Bee Fix"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/bee-fix"
 logoFile="logo.png"
 authors="Lupicus, MacTso"
-description='''Bee Fix Mod [MC-229321]'''
+description='''Bee Fix Mod [MC-168329]'''
 [[dependencies.beefix]]
     modId="forge"
     mandatory=true
-    versionRange="[37,)"
+    versionRange="[33,)"
     ordering="NONE"
     side="BOTH"
 [[dependencies.beefix]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.17.1,1.18)"
+    versionRange="[1.16.2,1.17)"
     ordering="NONE"
     side="BOTH"

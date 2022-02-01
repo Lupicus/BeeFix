@@ -1,4 +1,5 @@
 {
 	"BeehiveEntity": "asm/BeehiveEntity.js",
-	"Level": "asm/Level.js"
+	"Level": "asm/Level.js",
+	"TurtleEgg": "asm/TurtleEgg.js"
 }

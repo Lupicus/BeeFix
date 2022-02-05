@@ -1,3 +1,4 @@
 {
-	"World": "asm/World.js"
+	"World": "asm/World.js",
+	"TurtleEgg": "asm/TurtleEgg.js"
 }

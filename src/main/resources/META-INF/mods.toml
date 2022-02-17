@@ -8,7 +8,7 @@ displayName="Bee Fix"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/bee-fix"
 logoFile="logo.png"
 authors="Lupicus, MacTso"
-description='''Bee Fix Mod for MC-168329, MC-229321 and MC-248332'''
+description='''Bee Fix Mod fixes several Minecraft bugs related to Bees.'''
 [[dependencies.beefix]]
     modId="forge"
     mandatory=true

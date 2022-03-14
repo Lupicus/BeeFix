@@ -1,5 +1,6 @@
 {
+	"Bee": "asm/Bee.js",
+	"BeeRenderer": "asm/BeeRenderer.js",
 	"World": "asm/World.js",
-	"TurtleEgg": "asm/TurtleEgg.js",
-	"Bee": "asm/Bee.js"
+	"TurtleEgg": "asm/TurtleEgg.js"
 }

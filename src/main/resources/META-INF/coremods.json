@@ -2,5 +2,7 @@
 	"Bee": "asm/Bee.js",
 	"BeeRenderer": "asm/BeeRenderer.js",
 	"World": "asm/World.js",
+	"NavigationFix": "asm/NavigationFix.js",
+	"RandomPos": "asm/RandomPos.js",
 	"TurtleEgg": "asm/TurtleEgg.js"
 }

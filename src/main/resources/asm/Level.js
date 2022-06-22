@@ -35,7 +35,7 @@ function initializeCoreMod() {
 function patch_m_46466_(obj) {
 	var f1 = asmapi.mapMethod('m_6042_') // dimensionType
 	var n1 = "net/minecraft/world/level/Level"
-	var f2 = asmapi.mapMethod('m_63935_') // hasSkyLight
+	var f2 = asmapi.mapField('f_223549_') // hasSkyLight
 	var n2 = "net/minecraft/world/level/dimension/DimensionType"
 	var op6 = new LabelNode()
 	var op1 = new VarInsnNode(opc.ALOAD, 0)

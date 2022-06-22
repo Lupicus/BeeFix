@@ -51,7 +51,7 @@ function patch_m_7378_(obj) {
 		var f1 = asmapi.mapMethod('m_128441_') // contains
 		var n1 = "net/minecraft/nbt/CompoundTag"
 		var f2 = asmapi.mapMethod('m_20242_') // setNoGravity
-		var n2 = "net/minecraft/world/entity/Mob"
+		var n2 = "net/minecraft/world/entity/animal/Bee"
 		var op8 = new LabelNode()
 		var op1 = new VarInsnNode(opc.ALOAD, 1)
 		var op2 = new LdcInsnNode("NoGravity")
@@ -69,7 +69,7 @@ function patch_m_7378_(obj) {
 
 function setNoGravity(obj, node) {
 	var f2 = asmapi.mapMethod('m_20242_') // setNoGravity
-	var n2 = "net/minecraft/world/entity/Mob"
+	var n2 = "net/minecraft/world/entity/animal/Bee"
 	var op1 = new VarInsnNode(opc.ALOAD, 0)
 	var op2 = new InsnNode(opc.ICONST_1)
 	var op3 = asmapi.buildMethodCall(n2, f2, "(Z)V", asmapi.MethodType.VIRTUAL)

@@ -14,11 +14,11 @@ function initializeCoreMod() {
     		},
     		'transformer': function(classNode) {
     			var count = 0
-    			var fn = asmapi.mapMethod('m_148553_') // generateRandomDirectionWithinRadians
+    			var fn = asmapi.mapMethod('m_217855_') // generateRandomDirectionWithinRadians
     			for (var i = 0; i < classNode.methods.size(); ++i) {
     				var obj = classNode.methods.get(i)
     				if (obj.name == fn) {
-    					patch_m_148553_(obj)
+    					patch_m_217855_(obj)
     					count++
     				}
     			}
@@ -38,7 +38,7 @@ function add_half(obj, node) {
 }
 
 // [MC-206401] add 0.5 to x and z when creating BlockPos
-function patch_m_148553_(obj) {
+function patch_m_217855_(obj) {
 	var count = 0
 	var node = asmapi.findFirstInstruction(obj, opc.NEW)
 	while (node) {

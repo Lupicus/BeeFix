@@ -1,6 +1,7 @@
 var asmapi = Java.type('net.minecraftforge.coremod.api.ASMAPI')
 var opc = Java.type('org.objectweb.asm.Opcodes')
 var AbstractInsnNode = Java.type('org.objectweb.asm.tree.AbstractInsnNode')
+var FieldInsnNode = Java.type('org.objectweb.asm.tree.FieldInsnNode')
 var InsnNode = Java.type('org.objectweb.asm.tree.InsnNode')
 var JumpInsnNode = Java.type('org.objectweb.asm.tree.JumpInsnNode')
 var LabelNode = Java.type('org.objectweb.asm.tree.LabelNode')
@@ -20,6 +21,7 @@ function initializeCoreMod() {
     			var found2 = false
     			var fn = asmapi.mapMethod('m_7378_') // readAdditionalSaveData
     			var fn2 = asmapi.mapMethod('m_6518_') // finalizeSpawn
+    			var fn3 = asmapi.mapMethod('m_27872_') // isHiveValid
     			for (var i = 0; i < classNode.methods.size(); ++i) {
     				var obj = classNode.methods.get(i)
     				if (obj.name == fn) {
@@ -31,12 +33,16 @@ function initializeCoreMod() {
     					patch_m_6518_(obj)
     					count++
     				}
+    				else if (obj.name == fn3) {
+    					patch_m_27872_(obj)
+    					count++
+    				}
     			}
     			if (!found2) {
 					insert_m_6518_(classNode, fn2)
 					count++
     			}
-    			if (count < 2)
+    			if (count < 3)
     				asmapi.log("ERROR", "Failed to modify Bee: Method not found")
     			return classNode;
     		}
@@ -51,7 +57,7 @@ function patch_m_7378_(obj) {
 		var f1 = asmapi.mapMethod('m_128441_') // contains
 		var n1 = "net/minecraft/nbt/CompoundTag"
 		var f2 = asmapi.mapMethod('m_20242_') // setNoGravity
-		var n2 = "net/minecraft/world/entity/Mob"
+		var n2 = "net/minecraft/world/entity/animal/Bee"
 		var op8 = new LabelNode()
 		var op1 = new VarInsnNode(opc.ALOAD, 1)
 		var op2 = new LdcInsnNode("NoGravity")
@@ -69,7 +75,7 @@ function patch_m_7378_(obj) {
 
 function setNoGravity(obj, node) {
 	var f2 = asmapi.mapMethod('m_20242_') // setNoGravity
-	var n2 = "net/minecraft/world/entity/Mob"
+	var n2 = "net/minecraft/world/entity/animal/Bee"
 	var op1 = new VarInsnNode(opc.ALOAD, 0)
 	var op2 = new InsnNode(opc.ICONST_1)
 	var op3 = asmapi.buildMethodCall(n2, f2, "(Z)V", asmapi.MethodType.VIRTUAL)
@@ -104,4 +110,32 @@ function insert_m_6518_(cobj, fn) {
 	var op8 = new InsnNode(opc.ARETURN)
 	var list = asmapi.listOf(op1, op2, op3, op4, op5, op6, op7, op8)
 	obj.instructions.add(list)
+}
+
+// [MC-255743] add call to isTooFarAway
+function patch_m_27872_(obj) {
+	var m1 = asmapi.mapMethod('m_27854_') // hasHive
+	var m2 = asmapi.mapMethod('m_27889_') // isTooFarAway
+	var f1 = asmapi.mapField('f_27698_') // hivePos
+	var nn = "net/minecraft/world/entity/animal/Bee"
+	var node = asmapi.findFirstMethodCall(obj, asmapi.MethodType.VIRTUAL, nn, m1, "()Z")
+	if (node == null) {
+		asmapi.log("ERROR", "Failed to modify Bee: call not found")
+		return
+	}
+	node = node.getNext()
+	var node2 = node.getNext()
+	if (node.getOpcode() == opc.IFNE && node2.getType() == AbstractInsnNode.LABEL) {
+		var op1 = new JumpInsnNode(opc.IFEQ, node2)
+		var op2 = new VarInsnNode(opc.ALOAD, 0)
+		var op3 = new InsnNode(opc.DUP)
+		var op4 = new FieldInsnNode(opc.GETFIELD, nn, f1, "Lnet/minecraft/core/BlockPos;")
+		var op5 = asmapi.buildMethodCall(nn, m2, "(Lnet/minecraft/core/BlockPos;)Z", asmapi.MethodType.VIRTUAL)
+		var op6 = new JumpInsnNode(opc.IFEQ, node.label)
+		var list = asmapi.listOf(op1, op2, op3, op4, op5, op6)
+		obj.instructions.insertBefore(node, list)
+		obj.instructions.remove(node)
+	}
+	else
+		asmapi.log("ERROR", "Failed to modify Bee: IFNE/Label not found")
 }

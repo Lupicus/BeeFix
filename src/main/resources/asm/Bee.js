@@ -22,6 +22,7 @@ function initializeCoreMod() {
     			var fn = asmapi.mapMethod('m_7378_') // readAdditionalSaveData
     			var fn2 = asmapi.mapMethod('m_6518_') // finalizeSpawn
     			var fn3 = asmapi.mapMethod('m_27872_') // isHiveValid
+    			var fn4 = asmapi.mapMethod('m_142606_') // getBreedOffspring
     			for (var i = 0; i < classNode.methods.size(); ++i) {
     				var obj = classNode.methods.get(i)
     				if (obj.name == fn) {
@@ -37,12 +38,16 @@ function initializeCoreMod() {
     					patch_m_27872_(obj)
     					count++
     				}
+    				else if (obj.name == fn4 && (obj.access & opc.ACC_SYNTHETIC) == 0) {
+						patch_m_142606_(obj)
+						count++
+					}
     			}
     			if (!found2) {
 					insert_m_6518_(classNode, fn2)
 					count++
     			}
-    			if (count < 3)
+    			if (count < 4)
     				asmapi.log("ERROR", "Failed to modify Bee: Method not found")
     			return classNode;
     		}
@@ -110,6 +115,25 @@ function insert_m_6518_(cobj, fn) {
 	var op8 = new InsnNode(opc.ARETURN)
 	var list = asmapi.listOf(op1, op2, op3, op4, op5, op6, op7, op8)
 	obj.instructions.add(list)
+}
+
+// add conditional setNoGravity call
+function patch_m_142606_(obj) {
+	var node = asmapi.findFirstInstruction(obj, opc.ARETURN)
+	if (node) {
+		var f2 = asmapi.mapMethod('m_20242_') // setNoGravity
+		var n2 = "net/minecraft/world/entity/animal/Bee"
+		var op6 = new LabelNode()
+		var op1 = new InsnNode(opc.DUP)
+		var op2 = new JumpInsnNode(opc.IFNULL, op6)
+		var op3 = new InsnNode(opc.DUP)
+		var op4 = new InsnNode(opc.ICONST_1)
+		var op5 = asmapi.buildMethodCall(n2, f2, "(Z)V", asmapi.MethodType.VIRTUAL)
+		var list = asmapi.listOf(op1, op2, op3, op4, op5, op6)
+		obj.instructions.insertBefore(node, list)
+	}
+	else
+		asmapi.log("ERROR", "Failed to modify Bee: ARETURN not found")
 }
 
 // [MC-255743] add call to isTooFarAway

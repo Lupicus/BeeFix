@@ -40,11 +40,12 @@ function add_half(obj, node) {
 // [MC-206401] add 0.5 to x and z when creating BlockPos
 function patch_m_217855_(obj) {
 	var count = 0
-	var node = asmapi.findFirstInstruction(obj, opc.NEW)
+	var m1 = asmapi.mapMethod('m_274561_') // containing
+	var node = asmapi.findFirstInstruction(obj, opc.INVOKESTATIC)
 	while (node) {
-		if (node.desc.endsWith('BlockPos')) {
-			var node2 = node.getNext().getNext()
-			var node3 = node2.getNext().getNext().getNext()
+		if (node.owner == 'net/minecraft/core/BlockPos' && node.name == m1) {
+			var node2 = node.getPrevious()
+			var node3 = node2.getPrevious().getPrevious().getPrevious()
 			if (node2.getOpcode() == opc.DLOAD && node3.getOpcode() == opc.DLOAD) {
 				add_half(obj, node2)
 				add_half(obj, node3)
@@ -52,8 +53,8 @@ function patch_m_217855_(obj) {
 			}
 		}
 		var index = obj.instructions.indexOf(node)
-		node = asmapi.findFirstInstructionAfter(obj, opc.NEW, index + 1)
+		node = asmapi.findFirstInstructionAfter(obj, opc.INVOKESTATIC, index + 1)
 	}
 	if (count == 0)
-		asmapi.log("ERROR", "Failed to modify RandomPos: NEW/DLOAD not found")
+		asmapi.log("ERROR", "Failed to modify RandomPos: INVOKESTATIC/DLOAD not found")
 }

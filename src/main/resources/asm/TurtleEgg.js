@@ -1,8 +1,9 @@
 var asmapi = Java.type('net.minecraftforge.coremod.api.ASMAPI')
 var opc = Java.type('org.objectweb.asm.Opcodes')
-var VarInsnNode = Java.type('org.objectweb.asm.tree.VarInsnNode')
-var TypeInsnNode = Java.type('org.objectweb.asm.tree.TypeInsnNode')
+var AbstractInsnNode = Java.type('org.objectweb.asm.tree.AbstractInsnNode')
 var JumpInsnNode = Java.type('org.objectweb.asm.tree.JumpInsnNode')
+var TypeInsnNode = Java.type('org.objectweb.asm.tree.TypeInsnNode')
+var VarInsnNode = Java.type('org.objectweb.asm.tree.VarInsnNode')
 
 function initializeCoreMod() {
     return {
@@ -13,11 +14,11 @@ function initializeCoreMod() {
     		},
     		'transformer': function(classNode) {
     			var count = 0
-    			var fn = asmapi.mapMethod('m_57767_') // canDestroyEgg
+    			var fn = "canDestroyEgg"
     			for (var i = 0; i < classNode.methods.size(); ++i) {
     				var obj = classNode.methods.get(i)
     				if (obj.name == fn) {
-    					patch_m_57767_(obj)
+    					patch_canDestroy(obj)
     					count++
     				}
     			}
@@ -30,18 +31,19 @@ function initializeCoreMod() {
 }
 
 // add instanceof Bee
-function patch_m_57767_(obj) {
+function patch_canDestroy(obj) {
 	var desc = "net/minecraft/world/entity/ambient/Bat"
 	var node = asmapi.findFirstInstruction(obj, opc.INSTANCEOF)
 	while (node) {
 		if (node.desc == desc) {
 			var node2 = node.getNext()
-			if (node2.getOpcode() == opc.IFNE) {
-				var op1 = new VarInsnNode(opc.ALOAD, 2)
-				var op2 = new TypeInsnNode(opc.INSTANCEOF, "net/minecraft/world/entity/animal/Bee")
-				var op3 = new JumpInsnNode(opc.IFNE, node2.label)
+			var node3 = node2.getNext()
+			if (node2.getOpcode() == opc.IFEQ && node3.getType() == AbstractInsnNode.LABEL) {
+				var op1 = new JumpInsnNode(opc.IFNE, node3)
+				var op2 = new VarInsnNode(opc.ALOAD, 2)
+				var op3 = new TypeInsnNode(opc.INSTANCEOF, "net/minecraft/world/entity/animal/Bee")
 				var list = asmapi.listOf(op1, op2, op3)
-				obj.instructions.insert(node2, list)
+				obj.instructions.insert(node, list)
 			}
 			else
 				asmapi.log("ERROR", "Failed to modify TurtleEggBlock: INSTANCEOF is different")

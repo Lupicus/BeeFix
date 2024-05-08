@@ -1,10 +1,10 @@
 var asmapi = Java.type('net.minecraftforge.coremod.api.ASMAPI')
 var opc = Java.type('org.objectweb.asm.Opcodes')
 var AbstractInsnNode = Java.type('org.objectweb.asm.tree.AbstractInsnNode')
+var InsnNode = Java.type('org.objectweb.asm.tree.InsnNode')
+var JumpInsnNode = Java.type('org.objectweb.asm.tree.JumpInsnNode')
 var LabelNode = Java.type('org.objectweb.asm.tree.LabelNode')
 var VarInsnNode = Java.type('org.objectweb.asm.tree.VarInsnNode')
-var JumpInsnNode = Java.type('org.objectweb.asm.tree.JumpInsnNode')
-var InsnNode = Java.type('org.objectweb.asm.tree.InsnNode')
 
 function initializeCoreMod() {
     return {
@@ -15,11 +15,11 @@ function initializeCoreMod() {
     		},
     		'transformer': function(classNode) {
     			var count = 0
-    			var fn = asmapi.mapMethod('m_46466_') // prepareWeather
+    			var fn = "prepareWeather"
     			for (var i = 0; i < classNode.methods.size(); ++i) {
     				var obj = classNode.methods.get(i)
     				if (obj.name == fn) {
-    					patch_m_46466_(obj)
+    					patch_pWeather(obj)
     					count++
     				}
     			}
@@ -32,10 +32,10 @@ function initializeCoreMod() {
 }
 
 // add if (!this.dimensionType().hasSkyLight()) return
-function patch_m_46466_(obj) {
-	var f1 = asmapi.mapMethod('m_6042_') // dimensionType
+function patch_pWeather(obj) {
+	var f1 = "dimensionType"
 	var n1 = "net/minecraft/world/level/Level"
-	var f2 = asmapi.mapField('f_223549_') // hasSkyLight
+	var f2 = "hasSkyLight"
 	var n2 = "net/minecraft/world/level/dimension/DimensionType"
 	var op6 = new LabelNode()
 	var op1 = new VarInsnNode(opc.ALOAD, 0)

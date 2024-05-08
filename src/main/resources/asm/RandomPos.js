@@ -14,11 +14,11 @@ function initializeCoreMod() {
     		},
     		'transformer': function(classNode) {
     			var count = 0
-    			var fn = asmapi.mapMethod('m_217855_') // generateRandomDirectionWithinRadians
+    			var fn = "generateRandomDirectionWithinRadians"
     			for (var i = 0; i < classNode.methods.size(); ++i) {
     				var obj = classNode.methods.get(i)
     				if (obj.name == fn) {
-    					patch_m_217855_(obj)
+    					patch_generateRDWR(obj)
     					count++
     				}
     			}
@@ -38,9 +38,9 @@ function add_half(obj, node) {
 }
 
 // [MC-206401] add 0.5 to x and z when creating BlockPos
-function patch_m_217855_(obj) {
+function patch_generateRDWR(obj) {
 	var count = 0
-	var m1 = asmapi.mapMethod('m_274561_') // containing
+	var m1 = "containing"
 	var node = asmapi.findFirstInstruction(obj, opc.INVOKESTATIC)
 	while (node) {
 		if (node.owner == 'net/minecraft/core/BlockPos' && node.name == m1) {

@@ -18,27 +18,27 @@ function initializeCoreMod() {
     		'transformer': function(classNode) {
     			var count = 0
     			var found2 = false
-    			var fn = asmapi.mapMethod('m_7378_') // readAdditionalSaveData
-    			var fn2 = asmapi.mapMethod('m_6518_') // finalizeSpawn
-    			var fn3 = asmapi.mapMethod('m_142606_') // getBreedOffspring
+    			var fn = "readAdditionalSaveData"
+    			var fn2 = "finalizeSpawn"
+    			var fn3 = "getBreedOffspring"
     			for (var i = 0; i < classNode.methods.size(); ++i) {
     				var obj = classNode.methods.get(i)
     				if (obj.name == fn) {
-    					patch_m_7378_(obj)
+    					patch_read(obj)
     					count++
     				}
     				else if (obj.name == fn2) {
     					found2 = true
-    					patch_m_6518_(obj)
+    					patch_finalize(obj)
     					count++
     				}
     				else if (obj.name == fn3 && (obj.access & opc.ACC_SYNTHETIC) == 0) {
-						patch_m_142606_(obj)
+						patch_breed(obj)
 						count++
 					}
     			}
     			if (!found2) {
-					insert_m_6518_(classNode, fn2)
+					insert_finalize(classNode, fn2)
 					count++
     			}
     			if (count < 3)
@@ -50,12 +50,12 @@ function initializeCoreMod() {
 }
 
 // add conditional setNoGravity call
-function patch_m_7378_(obj) {
+function patch_read(obj) {
 	var node = asmapi.findFirstInstruction(obj, opc.RETURN)
 	if (node) {
-		var f1 = asmapi.mapMethod('m_128441_') // contains
+		var f1 = "contains"
 		var n1 = "net/minecraft/nbt/CompoundTag"
-		var f2 = asmapi.mapMethod('m_20242_') // setNoGravity
+		var f2 = "setNoGravity"
 		var n2 = "net/minecraft/world/entity/animal/Bee"
 		var op8 = new LabelNode()
 		var op1 = new VarInsnNode(opc.ALOAD, 1)
@@ -73,7 +73,7 @@ function patch_m_7378_(obj) {
 }
 
 function setNoGravity(obj, node) {
-	var f2 = asmapi.mapMethod('m_20242_') // setNoGravity
+	var f2 = "setNoGravity"
 	var n2 = "net/minecraft/world/entity/animal/Bee"
 	var op1 = new VarInsnNode(opc.ALOAD, 0)
 	var op2 = new InsnNode(opc.ICONST_1)
@@ -86,7 +86,7 @@ function setNoGravity(obj, node) {
 }
 
 // add setNoGravity call
-function patch_m_6518_(obj) {
+function patch_finalize(obj) {
 	var node = obj.instructions.getFirst()
 	if (node.getType() == AbstractInsnNode.LABEL)
 		node = node.getNext()
@@ -94,8 +94,8 @@ function patch_m_6518_(obj) {
 }
 
 // add setNoGravity call
-function insert_m_6518_(cobj, fn) {
-	var desc = "(Lnet/minecraft/world/level/ServerLevelAccessor;Lnet/minecraft/world/DifficultyInstance;Lnet/minecraft/world/entity/MobSpawnType;Lnet/minecraft/world/entity/SpawnGroupData;Lnet/minecraft/nbt/CompoundTag;)Lnet/minecraft/world/entity/SpawnGroupData;"
+function insert_finalize(cobj, fn) {
+	var desc = "(Lnet/minecraft/world/level/ServerLevelAccessor;Lnet/minecraft/world/DifficultyInstance;Lnet/minecraft/world/entity/MobSpawnType;Lnet/minecraft/world/entity/SpawnGroupData;)Lnet/minecraft/world/entity/SpawnGroupData;"
 	var obj = new MethodNode(opc.ACC_PUBLIC, fn, desc, null, null)
 	cobj.methods.add(obj)
 	setNoGravity(obj, null)
@@ -104,18 +104,17 @@ function insert_m_6518_(cobj, fn) {
 	var op3 = new VarInsnNode(opc.ALOAD, 2)
 	var op4 = new VarInsnNode(opc.ALOAD, 3)
 	var op5 = new VarInsnNode(opc.ALOAD, 4)
-	var op6 = new VarInsnNode(opc.ALOAD, 5)
-	var op7 = asmapi.buildMethodCall("net/minecraft/world/entity/animal/Animal", fn, desc, asmapi.MethodType.SPECIAL)
-	var op8 = new InsnNode(opc.ARETURN)
-	var list = asmapi.listOf(op1, op2, op3, op4, op5, op6, op7, op8)
+	var op6 = asmapi.buildMethodCall("net/minecraft/world/entity/animal/Animal", fn, desc, asmapi.MethodType.SPECIAL)
+	var op7 = new InsnNode(opc.ARETURN)
+	var list = asmapi.listOf(op1, op2, op3, op4, op5, op6, op7)
 	obj.instructions.add(list)
 }
 
 // add conditional setNoGravity call
-function patch_m_142606_(obj) {
+function patch_breed(obj) {
 	var node = asmapi.findFirstInstruction(obj, opc.ARETURN)
 	if (node) {
-		var f2 = asmapi.mapMethod('m_20242_') // setNoGravity
+		var f2 = "setNoGravity"
 		var n2 = "net/minecraft/world/entity/animal/Bee"
 		var op6 = new LabelNode()
 		var op1 = new InsnNode(opc.DUP)

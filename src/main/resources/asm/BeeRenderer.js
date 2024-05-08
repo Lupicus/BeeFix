@@ -16,7 +16,7 @@ function initializeCoreMod() {
     		'transformer': function(classNode) {
     			var count = 0
     			var found = false
-    			var fn = asmapi.mapMethod('m_6441_') // getFlipDegrees
+    			var fn = "getFlipDegrees"
     			for (var i = 0; i < classNode.methods.size(); ++i) {
     				var obj = classNode.methods.get(i)
     				if (obj.name == fn && (obj.access & opc.ACC_SYNTHETIC) == 0) {
@@ -25,8 +25,8 @@ function initializeCoreMod() {
     			}
     			count++
     			if (!found) {
-    				insert_m_6441_(classNode, fn)
-    				insert_m_6441_syn(classNode, fn)
+    				insert_getFD(classNode, fn)
+    				insert_getFD_syn(classNode, fn)
     			}
     			else
     				asmapi.log("INFO", "BeeRenderer patch being skipped; not needed in this version")
@@ -38,7 +38,7 @@ function initializeCoreMod() {
     }
 }
 
-function insert_m_6441_(cobj, fn) {
+function insert_getFD(cobj, fn) {
 	var desc = "(Lnet/minecraft/world/entity/animal/Bee;)F"
 	var obj = new MethodNode(opc.ACC_PROTECTED, fn, desc, null, null)
 	cobj.methods.add(obj)
@@ -49,7 +49,7 @@ function insert_m_6441_(cobj, fn) {
 	obj.instructions.add(list)
 }
 
-function insert_m_6441_syn(cobj, fn) {
+function insert_getFD_syn(cobj, fn) {
 	var desc = "(Lnet/minecraft/world/entity/LivingEntity;)F"
 	var obj = new MethodNode(opc.ACC_SYNTHETIC | opc.ACC_BRIDGE | opc.ACC_PROTECTED, fn, desc, null, null)
 	cobj.methods.add(obj)

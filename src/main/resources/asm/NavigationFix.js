@@ -12,11 +12,11 @@ function initializeCoreMod() {
     		},
     		'transformer': function(classNode) {
     			var count = 0
-				var fn = asmapi.mapMethod('m_7636_') // followThePath
+				var fn = "followThePath"
     			for (var i = 0; i < classNode.methods.size(); ++i) {
     				var obj = classNode.methods.get(i)
     				if (obj.name == fn) {
-						patch_m_7636_(obj)
+						patch_followTP(obj)
 						count++
     				}
     			}
@@ -29,7 +29,7 @@ function initializeCoreMod() {
 }
 
 // [Forge change causing NW drift for bees] replace F2D
-function patch_m_7636_(obj) {
+function patch_followTP(obj) {
 	var count = 0
 	var count2 = 0
 	var node = asmapi.findFirstInstruction(obj, opc.INVOKEVIRTUAL)

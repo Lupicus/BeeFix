@@ -49,23 +49,21 @@ function initializeCoreMod() {
     }
 }
 
-// add conditional setNoGravity call
+// add setNoGravity call
 function patch_read(obj) {
 	var node = asmapi.findFirstInstruction(obj, opc.RETURN)
 	if (node) {
-		var f1 = "contains"
-		var n1 = "net/minecraft/nbt/CompoundTag"
+		var f1 = "getBooleanOr"
+		var n1 = "net/minecraft/world/level/storage/ValueInput"
 		var f2 = "setNoGravity"
 		var n2 = "net/minecraft/world/entity/animal/Bee"
-		var op8 = new LabelNode()
-		var op1 = new VarInsnNode(opc.ALOAD, 1)
-		var op2 = new LdcInsnNode("NoGravity")
-		var op3 = asmapi.buildMethodCall(n1, f1, "(Ljava/lang/String;)Z", asmapi.MethodType.VIRTUAL)
-		var op4 = new JumpInsnNode(opc.IFNE, op8)
-		var op5 = new VarInsnNode(opc.ALOAD, 0)
-		var op6 = new InsnNode(opc.ICONST_1)
-		var op7 = asmapi.buildMethodCall(n2, f2, "(Z)V", asmapi.MethodType.VIRTUAL)
-		var list = asmapi.listOf(op1, op2, op3, op4, op5, op6, op7, op8)
+		var op1 = new VarInsnNode(opc.ALOAD, 0)
+		var op2 = new VarInsnNode(opc.ALOAD, 1)
+		var op3 = new LdcInsnNode("NoGravity")
+		var op4 = new InsnNode(opc.ICONST_1)
+		var op5 = asmapi.buildMethodCall(n1, f1, "(Ljava/lang/String;Z)Z", asmapi.MethodType.INTERFACE)
+		var op6 = asmapi.buildMethodCall(n2, f2, "(Z)V", asmapi.MethodType.VIRTUAL)
+		var list = asmapi.listOf(op1, op2, op3, op4, op5, op6)
 		obj.instructions.insertBefore(node, list)
 	}
 	else

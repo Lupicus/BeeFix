@@ -1,5 +1,6 @@
 {
 	"Bee": "asm/Bee.js",
+	"BeePollinate": "asm/BeePollinate.js",
 	"BeeRenderer": "asm/BeeRenderer.js",
 	"Level": "asm/Level.js",
 	"NavigationFix": "asm/NavigationFix.js",

@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[60,)"
+loaderVersion="[61,)"
 license="MIT License"
 [[mods]]
 modId="beefix"
@@ -13,12 +13,12 @@ description='''Bee Fix Mod fixes several Minecraft bugs related to Bees.'''
 [[dependencies.beefix]]
     modId="forge"
     mandatory=true
-    versionRange="[60,)"
+    versionRange="[61,)"
     ordering="NONE"
     side="BOTH"
 [[dependencies.beefix]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.21.10,1.22)"
+    versionRange="[1.21.11,1.22)"
     ordering="NONE"
     side="BOTH"

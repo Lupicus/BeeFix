@@ -13,7 +13,7 @@ function initializeCoreMod() {
     	'Bee': {
     		'target': {
     			'type': 'CLASS',
-    			'name': 'net.minecraft.world.entity.animal.Bee'
+    			'name': 'net.minecraft.world.entity.animal.bee.Bee'
     		},
     		'transformer': function(classNode) {
     			var count = 0
@@ -56,7 +56,7 @@ function patch_read(obj) {
 		var f1 = "getBooleanOr"
 		var n1 = "net/minecraft/world/level/storage/ValueInput"
 		var f2 = "setNoGravity"
-		var n2 = "net/minecraft/world/entity/animal/Bee"
+		var n2 = "net/minecraft/world/entity/animal/bee/Bee"
 		var op1 = new VarInsnNode(opc.ALOAD, 0)
 		var op2 = new VarInsnNode(opc.ALOAD, 1)
 		var op3 = new LdcInsnNode("NoGravity")
@@ -72,7 +72,7 @@ function patch_read(obj) {
 
 function setNoGravity(obj, node) {
 	var f2 = "setNoGravity"
-	var n2 = "net/minecraft/world/entity/animal/Bee"
+	var n2 = "net/minecraft/world/entity/animal/bee/Bee"
 	var op1 = new VarInsnNode(opc.ALOAD, 0)
 	var op2 = new InsnNode(opc.ICONST_1)
 	var op3 = asmapi.buildMethodCall(n2, f2, "(Z)V", asmapi.MethodType.VIRTUAL)
@@ -113,7 +113,7 @@ function patch_breed(obj) {
 	var node = asmapi.findFirstInstruction(obj, opc.ARETURN)
 	if (node) {
 		var f2 = "setNoGravity"
-		var n2 = "net/minecraft/world/entity/animal/Bee"
+		var n2 = "net/minecraft/world/entity/animal/bee/Bee"
 		var op6 = new LabelNode()
 		var op1 = new InsnNode(opc.DUP)
 		var op2 = new JumpInsnNode(opc.IFNULL, op6)

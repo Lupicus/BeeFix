@@ -41,7 +41,7 @@ function patch_canDestroy(obj) {
 			if (node2.getOpcode() == opc.IFEQ && node3.getType() == AbstractInsnNode.LABEL) {
 				var op1 = new JumpInsnNode(opc.IFNE, node3)
 				var op2 = new VarInsnNode(opc.ALOAD, 2)
-				var op3 = new TypeInsnNode(opc.INSTANCEOF, "net/minecraft/world/entity/animal/Bee")
+				var op3 = new TypeInsnNode(opc.INSTANCEOF, "net/minecraft/world/entity/animal/bee/Bee")
 				var list = asmapi.listOf(op1, op2, op3)
 				obj.instructions.insert(node, list)
 			}
